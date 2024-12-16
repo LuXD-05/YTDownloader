@@ -2,8 +2,8 @@ import os
 from kivy.lang import Builder
 from kivymd.tools.hotreload.app import MDApp
 from kivy.core.window import Window
-from kivy.animation import Animation
-from googleapiclient.discovery import build
+# from kivy.animation import Animation
+from kivymd.icon_definitions import md_icons
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.dialog import (
@@ -17,19 +17,10 @@ from kivymd.uix.dialog import (
 from kivymd.uix.button import MDButton, MDButtonText, MDIconButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.widget import Widget
-from kivymd.uix.list import (
-    MDListItem,
-    MDListItemHeadlineText,
-    MDListItemSupportingText,
-    MDListItemLeadingIcon,
-    MDListItemLeadingAvatar,
-    MDListItemTrailingIcon,
-    MDListItemTrailingCheckbox
-)
-from kivy.uix.image import Image
-from kivy.uix.image import AsyncImage
+# from kivy.uix.image import Image
+# from kivy.uix.image import AsyncImage
 from kivymd.uix.fitimage import FitImage
-from kivymd.uix.selectioncontrol import MDCheckbox
+# from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.anchorlayout import MDAnchorLayout
@@ -64,7 +55,7 @@ class MainApp(MDApp):
         # sownloader = manages all search-/download-related operations
         self.yt = Downloader()
         # GUI
-        self.screen = Builder.load_file("views/main.kv") #! Could also bee self.root = ...
+        self.screen = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv')) #! Could also bee self.root = ...
         # Instanciates a new ViewManager + changes selected_view to MainView
         # self.vm = ViewManager(views_dir="views")
         # self.vm.select("main")
