@@ -3,7 +3,6 @@ import re
 import ast
 import json
 import subprocess
-from datetime import datetime
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from httplib2 import ServerNotFoundError
@@ -13,7 +12,7 @@ from kivymd.uix.snackbar import MDSnackbar, MDSnackbarText
 
 DOWNLOAD_FOLDER = os.path.join(os.environ.get("USERPROFILE", ""), "Downloads")
 HISTORY_FILE = "download_history.json"
-FFMPEG_PATH = r"C:\Users\alessio\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-7.1-full_build\bin\ffmpeg.exe"
+FFMPEG_PATH = "ffmpeg"
 YTDLP_PATH = "yt-dlp"
 
 if not os.path.exists(HISTORY_FILE):
