@@ -2,6 +2,7 @@
 /.vscode
 /ViewManager.py
 *.json
+*.ico
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
