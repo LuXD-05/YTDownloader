@@ -25,7 +25,7 @@ class Downloader :
     format = None
     quality = None
     split_chapters = False
-    filter = ["video", "playlist"]
+    filter = ["video"]
     default_download_path = None
     api = None
     audio_formats = []
@@ -134,6 +134,7 @@ class Downloader :
                 pos_hint={"center_x": 0.5},
                 size_hint_x=0.8,
             ).open()
+            return
             
         response = request.execute()
         
