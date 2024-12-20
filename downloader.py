@@ -75,7 +75,7 @@ class Downloader :
             if match:
                 # Gets video/playlist id + searches by it
                 id = match.group(5)
-                results = self.search_yt_by_id(id, "Playlist" if "list=" in query else "Video")
+                results = self.search_yt_by_id(id, "Video" if "v=" in query else "Playlist")
             # If query is a normal search term
             else:
                 results = self.search_yt(query)
