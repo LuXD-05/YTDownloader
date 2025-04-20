@@ -6,7 +6,7 @@ This is an application which provides a GUI to search and download videos from Y
 
 Before starting to search for videos you need to specify your YouTube API key in the settings in the top-right corner.
 
-You can create your own API key by following these steps: https://developers.google.com/youtube/v3/getting-started?hl=it#before-you-start
+You can create your own API key by following these steps: https://developers.google.com/youtube/v3/getting-started#before-you-start
 
 ## Problems
 
@@ -19,9 +19,12 @@ This is in "downloader.py" in the "download_item" function.
 ## Todo
 
 UI:
-1) Btn "Delete selected" to delete all selected videos
-2) Btn/popup for file import (+ define import file structure)
-3) Confirm 1-by-1 setting (while downloading, handles video's options 1-by-1)
+1) View history
+2) Btn "Delete selected" to delete all selected videos
+3) Btn/popup for file import (+ define import file structure)
+4) Confirm 1-by-1 setting (while downloading, handles video's options 1-by-1)
+5) PACKAGE TO ANDROID
+6) SPOTIFY DOWNLOAD LOGIC
 
 Logic:
 1) Download function (playlist download)
