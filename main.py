@@ -92,7 +92,9 @@ class MainApp(MDApp):
             self.screen.ids.blt_selected.size_hint_y = 0.35
 
     def select(self, view):
-        self.screen = Builder.load_file(f"views/{view}.kv")
+        self.root.clear_widgets()
+        new_screen = Builder.load_file(os.path.join(os.path.dirname(__file__), "views", f"{view}.kv"))
+        self.root.add_widget(new_screen)
 
     def open_settings_menu(self):
         settings = [
@@ -107,6 +109,10 @@ class MainApp(MDApp):
             {
                 "text": "Select download path",
                 "on_release": lambda: self.select_setting(self.open_file_manager, os.getenv("DEFAULT_DOWNLOAD_PATH") if os.getenv("DEFAULT_DOWNLOAD_PATH") else os.path.expanduser("~")),
+            },
+            {
+                "text": "View history",
+                "on_release": lambda: self.select_setting(self.select, "history"),
             },
             {
                 "text": "Import",
@@ -473,4 +479,25 @@ info = {
     "Home Directory": [os.path.expanduser("~"), "folder-account"],
     "Environment Variables": [os.environ, "code-json"],
 }
+"""
+
+"""
+main.kv:
+    MDScreenManager:
+        MainView:
+        HistoryView:
+        
+main.py:
+    def build_app(self):
+        ...
+        self.screen_manager = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv'))
+        return self.screen_manager
+    def select(self, view) --> change_view(self, view):
+        self.screen_manager.current = view
+        
+(screens):
+    <MainView@MDScreen>:
+        name: "main"
+    <HistoryView@MDScreen>:
+        name: "history"
 """
