@@ -4,6 +4,9 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+# Set root as working dir
+Set-Location "$PSScriptRoot"
+
 # Creates venv if not exists
 if (-not (Test-Path "venv")) {
     Write-Host "Creating venv..."

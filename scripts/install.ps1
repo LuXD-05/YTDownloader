@@ -4,6 +4,9 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+# Set root as working dir
+Set-Location "$PSScriptRoot"
+
 # Creates venv if not exists
 if (-not (Test-Path "venv")) {
     Write-Host "Creating venv..."
@@ -24,7 +27,7 @@ pip install pyinstaller
 
 # Exe creation
 Write-Host "Creating exe file..."
-pyinstaller --onefile --windowed --icon="ytd-icon.ico" --name="YouTubeDownloader" --add-data "views\main.kv;views" main.py
+pyinstaller --onefile --windowed --icon=".\resources\ytd-icon.ico" --name="YouTubeDownloader" --add-data ".\src\views;views" .\src\main.py
 
 # Check if exe was created
 if (Test-Path ".\dist\YouTubeDownloader.exe") {
