@@ -1,35 +1,59 @@
-from dotenv import load_dotenv
+import json
+from pathlib import Path
 
-class SettingsManager:
+#! TEST IF IT WORKS
+
+class Settings:
+    
+    DEFAULT_SETTINGS = {
+        "YT_API_KEY": "",
+        "DEFAULT_DOWNLOAD_PATH": "",
+        "FORMAT": "mp3",
+        "QUALITY": "5",
+        "SPLIT_CHAPTERS": "False",
+        "FILTER": "video"
+    }
+    
+    settings = DEFAULT_SETTINGS
     
     def __init__(self):
-        load_dotenv()
-    
-    # Updates a .env variable's value with a new one
-    def set_env(self, variable, value):
+        self.data_dir = Path.cwd() / "data"
+        self.settings_path = self.data_dir / "settings.json"
         
-        # Reads the .env file
-        with open(".env", "r") as file:
-            lines = file.readlines()
-        
-        # Writes the update in the file
-        with open(".env", "w") as file:
-            updated = False
-            
-            # Rewrites all lines updating the one to update
-            for line in lines:
-                if line.startswith(variable):
-                    file.write(f"{variable}={value}\n")
-                    updated = True
-                else:
-                    file.write(line)
-            
-            # If didn't find variable, creates it
-            if not updated:
-                file.write(f"{variable}={value}\n")
+        # Create data dir if not exists
+        self.data_dir.mkdir(exist_ok=True)
 
-        # Reloads .env variables
-        load_dotenv(".env", override=True)
+        # Create json if not exists
+        if not self.settings_path.exists():
+            self.save()
+
+        # Load settings
+        self.settings = self.load()
     
-    def edit_yt_api_key(self, key):
-        self.set_env("YT_API_KEY", key)
+    def save(self):
+        # Writes CURRENT settings into json
+        with open(self.settings_path, "w", encoding="utf-8") as f:
+            json.dump(self.settings, f, indent=4)
+
+    def load(self):
+        # If json exists --> open & load settings || load default on error
+        if self.settings_path.exists():
+            with open(self.settings_path, "r", encoding="utf-8") as f:
+                try:
+                    self.settings = json.load(f)
+                except json.JSONDecodeError:
+                    self.settings = self.DEFAULT_SETTINGS
+                    #TODO: alert default settings?
+        # Json not exists --> save default settings
+        else:
+            self.settings = self.DEFAULT_SETTINGS
+            self.save()
+
+    # Returns a single variable || default value
+    def get(self, key, default=None):
+        return self.settings.get(key, default)
+
+    # Sets a single variable & saves to json
+    def set(self, key, value):
+        self[key] = value
+        self.save()

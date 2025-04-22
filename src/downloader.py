@@ -28,27 +28,24 @@ class Downloader :
     filter = ["video"]
     default_download_path = None
     api = None
-    audio_formats = []
-    video_formats = []
-    formats = []
+    audio_formats = ["m4a", "aac", "mp3", "wav", "flac"]
+    video_formats = ["mp4", "mov", "flv", "webm"]
+    formats = ["m4a", "aac", "mp3", "wav", "flac", "mp4", "mov", "flv", "webm"]
     
-    def __init__(self):
+    def __init__(self, settings):
         # Loads default settings (& options)
-        self.load_settings()
+        self.load_settings(settings)
         # Build google's api client (for yt)
         self.rebuild_yt_api()
         
-    # Loads settings into the app (from .env)
-    def load_settings(self):
-        self.key = os.getenv("YT_API_KEY")
-        self.format = os.getenv("FORMAT")
-        self.quality = os.getenv("QUALITY")
-        self.split_chapters = os.getenv("SPLIT_CHAPTERS")
-        self.filter = os.getenv("FILTER").split(",")
-        self.default_download_path = os.getenv("DEFAULT_DOWNLOAD_PATH")
-        self.audio_formats = os.getenv("AUDIO_FORMATS").split(",")
-        self.video_formats = os.getenv("VIDEO_FORMATS").split(",")
-        self.formats = self.video_formats + self.audio_formats
+    # Loads settings into the app
+    def load_settings(self, settings):
+        self.key = settings.YT_API_KEY
+        self.default_download_path = settings.DEFAULT_DOWNLOAD_PATH
+        self.format = settings.FORMAT
+        self.quality = settings.QUALITY
+        self.split_chapters = settings.SPLIT_CHAPTERS
+        self.filter = settings.FILTER.split(",")
         
     # (Re)builds the yt api object
     def rebuild_yt_api(self):

@@ -31,7 +31,7 @@ from kivymd.uix.snackbar import MDSnackbar, MDSnackbarText
 # from widgets import Dialog_yt_api_key
 
 from downloader import Downloader
-from settings import SettingsManager
+from settings import Settings
 
 class MainView(MDScreenManager):
     pass
@@ -39,7 +39,7 @@ class MainView(MDScreenManager):
 class MainApp(MDApp):
 
     DEBUG = True
-    KV_DIRS=[ os.path.join(os.getcwd(), "views") ]
+    KV_DIRS=[ os.path.join(os.getcwd(), ".\\src\\views") ]
     dialog = None
 
     sm = None
@@ -51,27 +51,21 @@ class MainApp(MDApp):
     def __init__(self, *args):
         super(MainApp, self).__init__(*args)
         # settings = contains settings + methods to access & edit them
-        self.settings = SettingsManager()
-        # sownloader = manages all search-/download-related operations
-        self.yt = Downloader()
-        # GUI
-        # self.screen = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv')) #! Could also bee self.root = ...
-        # Instanciates a new ViewManager + changes selected_view to MainView
-        # self.vm = ViewManager(views_dir="views")
-        # self.vm.select("main")
+        self.settings = Settings()
+        # downloader = manages all search-/download-related operations
+        self.yt = Downloader(self.settings)
 
     def build_app(self):
+        # App settings
         self.title = "YouTubeDownloader"
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Blue"
         Window.bind(on_resize=self.on_resize)
         Window.minimum_width = 640
         Window.minimum_height = 480
-        
+        # ScreenManager load primary file
         self.sm = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv'))
-        
         self.update_orientation()
-        # return self.screen
         return self.sm
 
     def on_resize(self, *args):
@@ -93,9 +87,6 @@ class MainApp(MDApp):
 
     def change_view(self, view):
         self.sm.current = view
-        # self.root.clear_widgets()
-        # new_screen = Builder.load_file(os.path.join(os.path.dirname(__file__), "views", f"{view}.kv"))
-        # self.root.add_widget(new_screen)
 
     def open_settings_menu(self):
         settings = [
@@ -109,7 +100,7 @@ class MainApp(MDApp):
             # },
             {
                 "text": "Select download path",
-                "on_release": lambda: self.select_setting(self.open_file_manager, os.getenv("DEFAULT_DOWNLOAD_PATH") if os.getenv("DEFAULT_DOWNLOAD_PATH") else os.path.expanduser("~")),
+                "on_release": lambda: self.select_setting(self.open_file_manager, self.settings.get("DEFAULT_DOWNLOAD_PATH", "") if self.settings.get("DEFAULT_DOWNLOAD_PATH", "") else os.path.expanduser("~")),
             },
             {
                 "text": "View history",
@@ -141,7 +132,7 @@ class MainApp(MDApp):
 
     def select_format(self, format):
         # Sets option in .env
-        self.settings.set_env("FORMAT", format)
+        self.settings.set("FORMAT", format)
         # Updates option in downloader
         self.yt.format = format
         # Sets format as menu text
@@ -162,7 +153,7 @@ class MainApp(MDApp):
 
     def select_quality(self, quality):
         # Sets option in .env
-        self.settings.set_env("QUALITY", quality)
+        self.settings.set("QUALITY", quality)
         # Updates option in downloader
         self.yt.quality = quality
         # Sets quality as menu text
@@ -180,7 +171,6 @@ class MainApp(MDApp):
         # else:
         #     self.yt.split_chapters = False
 
-    # self.settings.edit_youtube_api_key
     def show_dialog(self, params):
 
         # Gets dialog name (if None returns)
@@ -202,7 +192,7 @@ class MainApp(MDApp):
                 # Dialog_yt_api_key(), #! Doesn't work
                 MDTextField(
                     id="tf_yt_api_key",
-                    text=os.getenv("YT_API_KEY"),
+                    text=self.settings.get("YT_API_KEY", ""),
                     hint_text="YouTube API key",
                     mode="outlined",
                     size_hint_x=1,
@@ -220,7 +210,7 @@ class MainApp(MDApp):
                 MDButton(
                     MDButtonText(text="Salva"),
                     style="text",
-                    on_release=lambda x: self.close_dialog(self.settings.set_env, ["YT_API_KEY", self.dialog.get_current_screen.ids().tf_yt_api_key.text])
+                    on_release=lambda x: self.close_dialog(self.settings.set, ["YT_API_KEY", self.dialog.get_current_screen.ids().tf_yt_api_key.text])
                 ),
             )
         )
@@ -259,7 +249,7 @@ class MainApp(MDApp):
         _ = path if path is not None else os.path.expanduser("~")
 
         # Sets the path in .env & yt
-        self.settings.set_env("DEFAULT_DOWNLOAD_PATH", _)
+        self.settings.set("DEFAULT_DOWNLOAD_PATH", _)
         self.yt.default_download_path = _
 
         # Displays a snackbar popup
