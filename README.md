@@ -18,13 +18,13 @@ This is in "downloader.py" in the "download_item" function.
 
 ## Todo
 
-UI:
-1) View history
-2) Btn "Delete selected" to delete all selected videos
-3) Btn/popup for file import (+ define import file structure)
-4) Confirm 1-by-1 setting (while downloading, handles video's options 1-by-1)
-5) PACKAGE TO ANDROID
-6) SPOTIFY DOWNLOAD LOGIC
+0) PACKAGE TO ANDROID (also after some?)
+1) Test if new logic & folder structure work
+2) Handle history (new py file) & add its view
+3) Btn "Delete selected" to delete all selected videos
+4) Download function (playlist download)
 
-Logic:
-1) Download function (playlist download)
+### Eventual todos
+1) SPOTIFY DOWNLOAD LOGICx
+2) Confirm 1-by-1 setting (while downloading, handles video's options 1-by-1)
+3) Btn/popup for file import (+ define import file structure)
