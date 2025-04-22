@@ -142,7 +142,6 @@ class MainApp(MDApp):
     def select_format(self, format):
         # Sets option in .env
         self.settings.set_env("FORMAT", format)
-        self.settings.set_env("DOWNLOAD_FORMAT", format)
         # Updates option in downloader
         self.yt.format = format
         # Sets format as menu text
@@ -163,7 +162,7 @@ class MainApp(MDApp):
 
     def select_quality(self, quality):
         # Sets option in .env
-        self.settings.set_env("DOWNLOAD_QUALITY", quality)
+        self.settings.set_env("QUALITY", quality)
         # Updates option in downloader
         self.yt.quality = quality
         # Sets quality as menu text
