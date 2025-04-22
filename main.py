@@ -55,7 +55,7 @@ class MainApp(MDApp):
         # sownloader = manages all search-/download-related operations
         self.yt = Downloader()
         # GUI
-        self.screen = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv')) #! Could also bee self.root = ...
+        # self.screen = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv')) #! Could also bee self.root = ...
         # Instanciates a new ViewManager + changes selected_view to MainView
         # self.vm = ViewManager(views_dir="views")
         # self.vm.select("main")
@@ -67,12 +67,12 @@ class MainApp(MDApp):
         Window.bind(on_resize=self.on_resize)
         Window.minimum_width = 640
         Window.minimum_height = 480
-        # _ = MainView()
-        # _.add_widget(self.screen)
-        # self.sm =
-        # self.sm.add_widget(MDScreen().add_widget(self.root))
+        
+        self.sm = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv'))
+        
         self.update_orientation()
-        return self.screen
+        # return self.screen
+        return self.sm
 
     def on_resize(self, *args):
         self.update_orientation()
@@ -80,27 +80,28 @@ class MainApp(MDApp):
     def update_orientation(self):
         # horizontal
         if Window.width > Window.height:
-            self.screen.ids.blt_results.size_hint_x = 0.65
-            self.screen.ids.blt_results.size_hint_y = 1
-            self.screen.ids.blt_selected.size_hint_x = 0.35
-            self.screen.ids.blt_selected.size_hint_y = 1
+            self.sm.current_screen.ids.blt_results.size_hint_x = 0.65
+            self.sm.current_screen.ids.blt_results.size_hint_y = 1
+            self.sm.current_screen.ids.blt_selected.size_hint_x = 0.35
+            self.sm.current_screen.ids.blt_selected.size_hint_y = 1
         # vertical
         else:
-            self.screen.ids.blt_results.size_hint_x = 1
-            self.screen.ids.blt_results.size_hint_y = 0.65
-            self.screen.ids.blt_selected.size_hint_x = 1
-            self.screen.ids.blt_selected.size_hint_y = 0.35
+            self.sm.current_screen.ids.blt_results.size_hint_x = 1
+            self.sm.current_screen.ids.blt_results.size_hint_y = 0.65
+            self.sm.current_screen.ids.blt_selected.size_hint_x = 1
+            self.sm.current_screen.ids.blt_selected.size_hint_y = 0.35
 
-    def select(self, view):
-        self.root.clear_widgets()
-        new_screen = Builder.load_file(os.path.join(os.path.dirname(__file__), "views", f"{view}.kv"))
-        self.root.add_widget(new_screen)
+    def change_view(self, view):
+        self.sm.current = view
+        # self.root.clear_widgets()
+        # new_screen = Builder.load_file(os.path.join(os.path.dirname(__file__), "views", f"{view}.kv"))
+        # self.root.add_widget(new_screen)
 
     def open_settings_menu(self):
         settings = [
             {
                 "text": "Edit YouTube API key",
-                "on_release": lambda: self.select_setting(self.show_dialog, {"dialog_name": "Dialog_yt_api_key", "dialog_title": "Edit YouTube API key"}), #? Add ids array 'dialog_ids'?
+                "on_release": lambda: self.select_setting(self.show_dialog, {"dialog_name": "Dialog_yt_api_key", "dialog_title": "Edit YouTube API key"}), #? Add current_screen.ids array 'dialog_current_screen.ids'?
             },
             # {
             #     "text": "Confirm each download",
@@ -112,7 +113,7 @@ class MainApp(MDApp):
             },
             {
                 "text": "View history",
-                "on_release": lambda: self.select_setting(self.select, "history"),
+                "on_release": lambda: self.select_setting(self.change_view, "history"),
             },
             {
                 "text": "Import",
@@ -120,7 +121,7 @@ class MainApp(MDApp):
             },
             #...
         ]
-        self.menu = MDDropdownMenu(caller=self.screen.ids.btn_menu_settings, items=settings)
+        self.menu = MDDropdownMenu(caller=self.sm.current_screen.ids.btn_menu_settings, items=settings)
         self.menu.open()
 
     def select_setting(self, func, params=None):
@@ -135,7 +136,7 @@ class MainApp(MDApp):
 
     def open_format_menu(self):
         formats = [{ "text": format, "on_release": lambda x=format: self.select_format(x) } for format in self.yt.formats]
-        self.menu = MDDropdownMenu(caller=self.screen.ids.btn_menu_format, items=formats) # width_mult=4, = dimensione del menu
+        self.menu = MDDropdownMenu(caller=self.sm.current_screen.ids.btn_menu_format, items=formats) # width_mult=4, = dimensione del menu
         self.menu.open()
 
     def select_format(self, format):
@@ -145,7 +146,7 @@ class MainApp(MDApp):
         # Updates option in downloader
         self.yt.format = format
         # Sets format as menu text
-        self.screen.ids.btn_menu_format.children[0].text = format
+        self.sm.current_screen.ids.btn_menu_format.children[0].text = format
         # Closes menu
         self.menu.dismiss()
         self.menu = None
@@ -157,7 +158,7 @@ class MainApp(MDApp):
                 "on_release": lambda x=i+1: self.select_quality(x),
             } for i in range(5)
         ]
-        self.menu = MDDropdownMenu(caller=self.screen.ids.btn_menu_quality, items=qualities)
+        self.menu = MDDropdownMenu(caller=self.sm.current_screen.ids.btn_menu_quality, items=qualities)
         self.menu.open()
 
     def select_quality(self, quality):
@@ -166,7 +167,7 @@ class MainApp(MDApp):
         # Updates option in downloader
         self.yt.quality = quality
         # Sets quality as menu text
-        self.screen.ids.btn_menu_quality.children[0].text = str(quality)
+        self.sm.current_screen.ids.btn_menu_quality.children[0].text = str(quality)
         # Closes menu
         self.menu.dismiss()
         self.menu = None
@@ -220,7 +221,7 @@ class MainApp(MDApp):
                 MDButton(
                     MDButtonText(text="Salva"),
                     style="text",
-                    on_release=lambda x: self.close_dialog(self.settings.set_env, ["YT_API_KEY", self.dialog.get_ids().tf_yt_api_key.text])
+                    on_release=lambda x: self.close_dialog(self.settings.set_env, ["YT_API_KEY", self.dialog.get_current_screen.ids().tf_yt_api_key.text])
                 ),
             )
         )
@@ -295,14 +296,14 @@ class MainApp(MDApp):
             return
 
         # Clears videos from UI
-        self.screen.ids.list_results.clear_widgets()
+        self.sm.current_screen.ids.list_results.clear_widgets()
 
         # Search video
         results = self.yt.search(query)
 
         # Adds items
         for item in results:
-            self.screen.ids.list_results.add_widget(
+            self.sm.current_screen.ids.list_results.add_widget(
                 MDGridLayout(
                     FitImage(
                         id="result_img",
@@ -381,7 +382,7 @@ class MainApp(MDApp):
             if btn.icon == "checkbox-marked": 
                 btn.icon = "checkbox-blank-outline"
             else:
-                item_to_deselect = next((x for x in self.screen.ids.list_results.children if x.id == item["id"]), None)
+                item_to_deselect = next((x for x in self.sm.current_screen.ids.list_results.children if x.id == item["id"]), None)
                 if item_to_deselect is not None:
                     item_to_deselect.children[0].children[0].icon = "checkbox-blank-outline"
             self.deselect_item(item)
@@ -431,15 +432,15 @@ class MainApp(MDApp):
             size_hint_y=None,
             height="70dp",
         )
-        self.screen.ids.list_selected.add_widget(selected_item)
+        self.sm.current_screen.ids.list_selected.add_widget(selected_item)
         # Adds item id to list
         self.selected_items.append(item)
 
     def deselect_item(self, item):
         # Removes item from list_selected
-        widget_to_remove = next((x for x in self.screen.ids.list_selected.children if x.id == item["id"]), None)
+        widget_to_remove = next((x for x in self.sm.current_screen.ids.list_selected.children if x.id == item["id"]), None)
         if widget_to_remove is not None:
-            self.screen.ids.list_selected.remove_widget(widget_to_remove)
+            self.sm.current_screen.ids.list_selected.remove_widget(widget_to_remove)
         # Removes item from selected_items
         item_to_remove = next((x for x in self.selected_items if x["id"] == item["id"]), None)
         if item_to_remove is not None:
@@ -451,8 +452,8 @@ class MainApp(MDApp):
         # Clears selected list
         self.selected_items = []
         # Clears list_selected + set deselected boxes to list_results
-        self.screen.ids.list_selected.clear_widgets()
-        for widget in self.screen.ids.list_results.children:
+        self.sm.current_screen.ids.list_selected.clear_widgets()
+        for widget in self.sm.current_screen.ids.list_results.children:
             widget.children[0].children[0].icon = "checkbox-blank-outline"
 
 if __name__ == '__main__':
@@ -490,10 +491,10 @@ main.kv:
 main.py:
     def build_app(self):
         ...
-        self.screen_manager = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv'))
-        return self.screen_manager
+        self.sm_manager = Builder.load_file(os.path.join(os.path.dirname(__file__), 'views', 'main.kv'))
+        return self.sm_manager
     def select(self, view) --> change_view(self, view):
-        self.screen_manager.current = view
+        self.sm_manager.current = view
         
 (screens):
     <MainView@MDScreen>:

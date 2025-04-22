@@ -1,0 +1,235 @@
+<HomeView@MDScreen>:
+    name: "home"
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        #* Search bar + filters + options
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: "64dp"
+            padding: "4dp"
+            spacing: "4dp"
+            md_bg_color: [0.1,0.1,0.1,1]
+
+            MDTextField:
+                id: tf_search
+                size_hint_y: None
+                pos_hint: {"center_x": .5, "center_y": .5}
+                hint_text: "Search (term or URL)"
+
+            Widget:
+                size_hint_x: None
+                width: "10dp"
+
+            MDIconButton:
+                style: "standard"
+                icon: "magnify"
+                theme_width: "Custom"
+                size_hint_x: None
+                width: self.height
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: app.search(app.sm.current_screen.ids.tf_search.text)
+
+            Widget:
+                size_hint_x: None
+                width: "10dp"
+
+            MDIconButton:
+                id: btn_filter
+                style: "standard"
+                icon: "filter"
+                theme_width: "Custom"
+                size_hint_x: None
+                width: self.height
+                pos_hint: {"center_x": .5, "center_y": .5}
+                # on_release: app.add_video()
+                
+            Widget:
+                size_hint_x: None
+                width: "10dp"
+
+            MDIconButton:
+                id: btn_menu_settings
+                style: "standard"
+                icon: "cog"
+                theme_width: "Custom"
+                size_hint_x: None
+                width: self.height
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: app.open_settings_menu()
+            
+            Widget:
+                size_hint_x: None
+                width: "10dp"
+
+        #* Download options
+        MDBoxLayout:
+            id: lt_options
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: "56dp"
+            padding: "10dp"
+            md_bg_color: [0.1,0.1,0.1,1]
+
+            # MDSegmentedButton:
+            #     size_hint_x: None
+            #     width: "300dp"
+            #     pos_hint: {"center_x": .5, "center_y": .5}
+            #     MDSegmentedButtonItem:
+            #         on_active: if self.active: app.yt.set_filter(["video"]) #self.children[0].children[0].text
+            #         MDSegmentButtonLabel:
+            #             text: "Video"
+            #     MDSegmentedButtonItem:
+            #         on_active: if self.active: app.yt.set_filter(["video", "playlist"]) #self.children[0].children[0].text
+            #         active: True
+            #         MDSegmentButtonLabel:
+            #             text: "Tutto"
+            #     MDSegmentedButtonItem:
+            #         on_active: if self.active: app.yt.set_filter(["playlist"]) #self.children[0].children[0].text
+            #         MDSegmentButtonLabel:
+            #             text: "Playlist"
+
+            Widget:
+                size_hint_x: None
+                width: "20dp"
+
+            # Format
+            MDButton:
+                id: btn_menu_format
+                style: "filled"
+                size_hint_x: None
+                size_hint_y: None
+                theme_width: "Custom"
+                height: 30
+                width: 75
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: app.open_format_menu()
+                MDButtonText:
+                    text: app.yt.format if app.yt.format is not None else "Format"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+            
+            Widget:
+                size_hint_x: None
+                width: "20dp"
+            
+            # Quality
+            MDButton:
+                id: btn_menu_quality
+                style: "filled"
+                size_hint_x: None
+                size_hint_y: None
+                theme_width: "Custom"
+                height: 30
+                width: 75
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: app.open_quality_menu()
+                MDButtonText:
+                    text: str(app.yt.quality) if app.yt.quality is not None else "Quality"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+            # Widget:
+            #     size_hint_x: None
+            #     width: "20dp"
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                padding: "20dp"
+                # Split Chapters
+                MDLabel:
+                    text: "Split chapters"
+                    size_hint_x: None
+                    size_hint_y: None
+                    width: "80dp"
+                    height: "30dp"
+                    theme_text_color: "Custom"
+                    text_color: [1, 1, 1, 1]
+                    pos_hint: {"center_y": .5}
+                    style: "Body"
+                    role: "medium"
+                MDCheckbox:
+                    size_hint: None, None
+                    size: "48dp", "48dp"
+                    active: False
+                    on_active: app.set_split_chapters(self.active)
+                    pos_hint: {"center_y": .5}
+                # MDButton:
+                #     style: "outlined"
+                #     size_hint_y: None
+                #     height: 30
+                #     pos_hint: {"center_x": .5, "center_y": .5}
+                #     # background_color: [30/255, 144/255, 255/255, 1]
+                #     on_release: app.set_split_chapters(self)
+                #     MDButtonIcon:
+                #         icon: "check"
+                #         x: btn_txt_split_chapters.x - (self.width + dp(6))
+                #     MDButtonText:
+                #         id: btn_txt_split_chapters
+                #         text: "Split chapters"
+                #         pos_hint: {"center_x": .57, "center_y": .5}
+
+            # Widget:
+            #     size_hint_x: .3
+            #     width: "20dp"
+
+        #* Videos + selected
+        StackLayout:
+            size_hint_y: .7
+
+            # video cercati
+            MDBoxLayout:
+                id: blt_results
+                orientation: 'vertical'
+                size_hint_y: .1
+                width: 500
+                md_bg_color: [0.2, 0.2, 0.2, 1]
+
+                MDScrollView:
+                    do_scroll_x: False
+                    MDList:
+                        id: list_results
+
+            # video selezionati
+            MDBoxLayout:
+                id: blt_selected
+                orientation: 'vertical'
+                size_hint_y: .1
+                width: 500
+                md_bg_color: [0.15,0.15,0.15,1]
+
+                MDScrollView:
+                    do_scroll_x: False
+                    MDList:
+                        id: list_selected
+
+
+        #* Download options
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            size_hint_x: 1
+            height: "64dp"
+            md_bg_color: [0.1,0.1,0.1,1]
+            
+            Widget:
+                size_hint_x: .45
+            MDButton:
+                style: "filled"
+                size_hint_x: None
+                size_hint_y: None
+                theme_width: "Custom"
+                height: 40
+                width: 300
+                pos_hint: {"center_x": .5, "center_y": .5}
+                background_color: [30/255, 144/255, 255/255, 1]
+                on_release: app.download()
+                MDButtonIcon:
+                    icon: "download"
+                    x: text.x - (self.width + dp(6))
+                MDButtonText:
+                    id: text
+                    text: "Download"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+            Widget:
+                size_hint_x: .45
