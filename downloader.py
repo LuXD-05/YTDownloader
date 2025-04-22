@@ -11,14 +11,13 @@ from imageio_ffmpeg import get_ffmpeg_exe
 
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarText
 
-DOWNLOAD_FOLDER = os.path.join(os.environ.get("USERPROFILE", ""), "Downloads")
 HISTORY_FILE = "download_history.json"
 FFMPEG_PATH = get_ffmpeg_exe()
 YTDLP_PATH = "yt-dlp"
 
 if not os.path.exists(HISTORY_FILE):
     with open(HISTORY_FILE, "w") as f:
-        json.dump([], f)
+        json.dump([], f, ensure_ascii=False)
 
 class Downloader :
     
@@ -272,7 +271,7 @@ class Downloader :
     #     history = self.load_history()
     #     history.append({"video_id": video_id, "title": title, "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")})
     #     with open(HISTORY_FILE, "w") as f:
-    #         json.dump(history, f)
+    #         json.dump(history, f, ensure_ascii=False)
     
     # def load_history():
     #     # if not os.path.exists(HISTORY_FILE):
