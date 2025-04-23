@@ -40,12 +40,12 @@ class Downloader :
         
     # Loads settings into the app
     def load_settings(self, settings):
-        self.key = settings.YT_API_KEY
-        self.default_download_path = settings.DEFAULT_DOWNLOAD_PATH
-        self.format = settings.FORMAT
-        self.quality = settings.QUALITY
-        self.split_chapters = settings.SPLIT_CHAPTERS
-        self.filter = settings.FILTER.split(",")
+        self.key = settings["YT_API_KEY"]
+        self.default_download_path = settings["DEFAULT_DOWNLOAD_PATH"]
+        self.format = settings["FORMAT"]
+        self.quality = settings["QUALITY"]
+        self.split_chapters = settings["SPLIT_CHAPTERS"]
+        self.filter = settings["FILTER"].split(",")
         
     # (Re)builds the yt api object
     def rebuild_yt_api(self):

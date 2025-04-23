@@ -53,7 +53,7 @@ class MainApp(MDApp):
         # settings = contains settings + methods to access & edit them
         self.settings = Settings()
         # downloader = manages all search-/download-related operations
-        self.yt = Downloader(self.settings)
+        self.yt = Downloader(self.settings.settings)
 
     def build_app(self):
         # App settings
