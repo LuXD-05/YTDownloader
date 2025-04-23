@@ -1,8 +1,6 @@
 import json
 from pathlib import Path
 
-#! TEST IF IT WORKS
-
 class Settings:
     
     DEFAULT_SETTINGS = {
