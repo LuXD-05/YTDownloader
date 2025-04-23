@@ -14,21 +14,17 @@ class Settings:
         "FILTER": "video"
     }
     
-    settings = DEFAULT_SETTINGS
-    
     def __init__(self):
+        self.settings = {}
         self.data_dir = Path.cwd() / "data"
         self.settings_path = self.data_dir / "settings.json"
-        
         # Create data dir if not exists
         self.data_dir.mkdir(exist_ok=True)
-
         # Create json if not exists
         if not self.settings_path.exists():
             self.save()
-
         # Load settings
-        self.settings = self.load()
+        self.load()
     
     def save(self):
         # Writes CURRENT settings into json
@@ -40,8 +36,11 @@ class Settings:
         if self.settings_path.exists():
             with open(self.settings_path, "r", encoding="utf-8") as f:
                 try:
-                    self.settings = json.load(f)
-                except json.JSONDecodeError:
+                    #! DONT WORK IF NOT SEPARATED
+                    _ = f.read()
+                    __ = json.loads(_)
+                    self.settings = __
+                except json.JSONDecodeError as e:
                     self.settings = self.DEFAULT_SETTINGS
                     #TODO: alert default settings?
         # Json not exists --> save default settings
