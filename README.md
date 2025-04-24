@@ -19,10 +19,9 @@ This is in "downloader.py" in the "download_item" function.
 ## Todo
 
 0) PACKAGE TO ANDROID (also after some?)
-1) Test if new logic & folder structure work
-2) Handle history (new py file) & add its view
-3) Btn "Delete selected" to delete all selected videos
-4) Download function (playlist download)
+1) Handle history (new py file) & add its view
+2) Btn "Delete selected" to delete all selected videos
+3) Download function (playlist download)
 
 ### Eventual todos
 1) SPOTIFY DOWNLOAD LOGICx
