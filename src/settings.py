@@ -52,5 +52,5 @@ class Settings:
 
     # Sets a single variable & saves to json
     def set(self, key, value):
-        self[key] = value
+        self.settings[key] = value
         self.save()
